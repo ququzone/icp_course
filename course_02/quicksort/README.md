@@ -15,6 +15,7 @@ moc --package base $(dfx cache show)/base -r src/quicksort/sort.mo
 dfx start
 dfx deploy
 // open ui canister and input canister id to load quicksort canister
+dfx canister call XXX
 ```
 
 ### deploy to Candid UI
