@@ -15,4 +15,6 @@ dfx stop
 
 dfx canister call http_counter increment
 dfx canister call http_counter set '(555)'
+
+dfx deploy --network=ic --with-cycles=400000000000
 ```

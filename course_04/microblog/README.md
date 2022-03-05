@@ -15,4 +15,9 @@ dfx canister call microblog2 post "(\"First post 2\")"
 dfx canister call microblog timeline "()"
 
 dfx canister call microblog posts "(1_646_501_329_921_515_000)"
+
+dfx canister --network=ic call veqit-fyaaa-aaaal-qamda-cai post "(\"First post\")"
+dfx canister --network=ic call veqit-fyaaa-aaaal-qamda-cai post "(\"Second post\")"
+
+dfx canister --network=ic call vdroh-iaaaa-aaaal-qamdq-cai follow "(principal \"veqit-fyaaa-aaaal-qamda-cai\")"
 ```
