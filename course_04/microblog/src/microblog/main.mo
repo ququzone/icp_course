@@ -16,7 +16,8 @@ actor {
     stable var followed: List.List<Principal> = List.nil();
     stable var messages: List.List<Message> = List.nil();
 
-    public shared func follow(id: Principal): async () {
+    public shared (msg) func follow(id: Principal): async () {
+        assert(Principal.toText(msg.caller) == "6wqca-imgxf-edewp-ranox-mnbro-pem6r-kqzkb-k4dln-ly263-7kauq-lae");
         followed := List.push(id, followed);
     };
 
@@ -24,7 +25,8 @@ actor {
         List.toArray(followed)
     };
 
-    public shared func post(message: Text): async () {
+    public shared (msg) func post(message: Text): async () {
+        assert(Principal.toText(msg.caller) == "6wqca-imgxf-edewp-ranox-mnbro-pem6r-kqzkb-k4dln-ly263-7kauq-lae");
         messages := List.push(message, messages);
     };
 
