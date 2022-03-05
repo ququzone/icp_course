@@ -1,8 +1,4 @@
 {
-  "counter": {
-    "ic": "754m5-7iaaa-aaaal-qakhq-cai"
-  },
-  "http_counter": {
-    "ic": "5abcv-maaaa-aaaal-qakia-cai"
-  }
+  "counter": {},
+  "http_counter": {}
 }
