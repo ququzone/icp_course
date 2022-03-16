@@ -52,10 +52,13 @@ async function load_data() {
     }
   }
 
-
+  var updated = false;
   const follows = await microblog.follows();
   const followsUI = document.getElementById("follows");
-  if(followsUI.childElementCount !== follows.length) {
+  const follows_count = Number(followsUI.getAttribute("count"));
+  if(follows_count !== follows.length) {
+    var updated = true;
+    followsUI.setAttribute("count", follows.length);
     followsUI.replaceChildren([]);
     for (let i = 0; i < follows.length; i++) {
       let actor = createActor(follows[i]);
@@ -72,21 +75,23 @@ async function load_data() {
   }
 
   const timelineUI = document.getElementById("timeline");
-  timelineUI.replaceChildren([]);
-  for (let j = 0; j < follows.length; j++) {
-    const follow = follows[j];
-    const actor = createActor(follow);
-    const timeline = await actor.posts(now);
-    for (let i = 0; i < timeline.length; i++) {
-      const post = document.createElement("div");
-      const timestamp = new Date();
-      timestamp.setTime(Number(timeline[i].time) / 1000000);
-      let author = timeline[i].author;
-      if (author == "") {
-        author = "NoName";
+  if (updated) {
+    timelineUI.replaceChildren([]);
+    for (let j = 0; j < follows.length; j++) {
+      const follow = follows[j];
+      const actor = createActor(follow);
+      const timeline = await actor.posts(now);
+      for (let i = 0; i < timeline.length; i++) {
+        const post = document.createElement("div");
+        const timestamp = new Date();
+        timestamp.setTime(Number(timeline[i].time) / 1000000);
+        let author = timeline[i].author;
+        if (author == "") {
+          author = "NoName";
+        }
+        post.innerHTML = `<p>${timeline[i].text}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
+        timelineUI.appendChild(post);
       }
-      post.innerHTML = `<p>${timeline[i].text}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
-      timelineUI.appendChild(post);
     }
   }
 }
