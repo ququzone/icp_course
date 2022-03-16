@@ -23,12 +23,12 @@ async function load_post(e) {
   for (let i = 0; i < posts.length; i++) {
     const post = document.createElement("div");
     const timestamp = new Date();
-    timestamp.setTime(Number(posts[i].timestamp) / 1000000);
+    timestamp.setTime(Number(posts[i].time) / 1000000);
     let author = posts[i].author;
     if (author == "") {
       author = "NoName";
     }
-    post.innerHTML = `<p>${posts[i].content}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
+    post.innerHTML = `<p>${posts[i].text}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
     postsUI.appendChild(post);
   }
 }
@@ -42,32 +42,16 @@ async function load_data() {
     for (let i = 0; i < posts.length; i++) {
       const post = document.createElement("div");
       const timestamp = new Date();
-      timestamp.setTime(Number(posts[i].timestamp) / 1000000);
+      timestamp.setTime(Number(posts[i].time) / 1000000);
       let author = posts[i].author;
       if (author == "") {
         author = "NoName";
       }
-      post.innerHTML = `<p>${posts[i].content}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
+      post.innerHTML = `<p>${posts[i].text}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
       postsUI.appendChild(post);
     }
   }
 
-  const timeline = await microblog.timeline(now);
-  const timelineUI = document.getElementById("timeline");
-  if(timelineUI.childElementCount !== timeline.length) {
-    timelineUI.replaceChildren([]);
-    for (let i = 0; i < timeline.length; i++) {
-      const post = document.createElement("div");
-      const timestamp = new Date();
-      timestamp.setTime(Number(timeline[i].timestamp) / 1000000);
-      let author = timeline[i].author;
-      if (author == "") {
-        author = "NoName";
-      }
-      post.innerHTML = `<p>${timeline[i].content}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
-      timelineUI.appendChild(post);
-    }
-  }
 
   const follows = await microblog.follows();
   const followsUI = document.getElementById("follows");
@@ -84,6 +68,25 @@ async function load_data() {
       follow.onclick = load_post;
       follow.innerHTML = name;
       followsUI.appendChild(follow);
+    }
+  }
+
+  const timelineUI = document.getElementById("timeline");
+  timelineUI.replaceChildren([]);
+  for (let j = 0; j < follows.length; j++) {
+    const follow = follows[j];
+    const actor = createActor(follow);
+    const timeline = await actor.posts(now);
+    for (let i = 0; i < timeline.length; i++) {
+      const post = document.createElement("div");
+      const timestamp = new Date();
+      timestamp.setTime(Number(timeline[i].time) / 1000000);
+      let author = timeline[i].author;
+      if (author == "") {
+        author = "NoName";
+      }
+      post.innerHTML = `<p>${timeline[i].text}</p><span>${author} Post at ${timestamp.toLocaleTimeString()}<span>`;
+      timelineUI.appendChild(post);
     }
   }
 }

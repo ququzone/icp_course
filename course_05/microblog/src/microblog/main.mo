@@ -5,9 +5,9 @@ import Time "mo:base/Time";
 
 actor {
     public type Message = {
-        author: ?Text;
-        content: Text;
-        timestamp: Int;
+        author: Text;
+        text: Text;
+        time: Time.Time;
     };
 
     public type Microblog = actor {
@@ -33,10 +33,14 @@ actor {
 
     public shared (msg) func post(opt: Text, message: Text): async () {
         assert(opt == "123456");
+        var author: Text = switch name {
+            case (?n) n;
+            case null "";
+        };
         messages := List.push({
-            author = name;
-            content = message;
-            timestamp = Time.now();
+            author = author;
+            text = message;
+            time = Time.now();
         }, messages);
     };
 
@@ -44,7 +48,7 @@ actor {
         var result: List.List<Message> = List.nil();
 
         label f for (msg in Iter.fromList(messages)) {
-            if (msg.timestamp > since) {
+            if (msg.time > since) {
                 result := List.push(msg, result);
             } else {
                 break f;
